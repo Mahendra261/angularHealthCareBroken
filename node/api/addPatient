@@ -1,0 +1,46 @@
+let patientDetailsObj=require('../models/patients');
+let mongoose=require('mongoose');
+const bodyParser = require('body-parser');
+let jwt = require('jsonwebtoken');
+let config = require('../config');
+const mongo = require('mongodb').MongoClient
+
+module.exports=function(req,res){
+    
+   /*write your code here*/
+   console.log('addPatient ****' + req.body.userId);
+
+    const newPatient = new patientDetailsObj({
+      	_id: new mongoose.Types.ObjectId().toHexString(),
+        fname: req.body.firstName,
+        lname: req.body.lastName,
+        gender:req.body.gender,
+        dob: req.body.dob,
+        mobile:req.body.mobile,
+        email:req.body.email,
+        desc:req.body.description,
+        userId: req.body.userId
+        });
+      
+  newPatient.save()
+  .then(result => {
+        console.log(result);
+        // if(!result){
+        //   return res.status(400).json({
+        //     message: 'registeration failed!'
+        //   })
+        // }
+        res.status(200).json({
+          status: "success",
+          _id: result._id
+        });
+      })
+  .catch(err =>{
+    console.log(err);
+    res.status(500).json({
+          message: "failed to add New patient details!",
+         
+        });
+  })    
+    
+  }
